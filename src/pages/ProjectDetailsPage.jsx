@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import Loader from "../components/Loader";
+import AddTask from "../components/AddTask";
 
 function ProjectDetailsPage() {
 
@@ -13,13 +14,17 @@ function ProjectDetailsPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get(`${API_URL}/projects/${projectId}`)
-            .then(response => {
-                setProject(response.data);
-            })
-            .catch((error) => console.log("Error getting project details from the API...", error));
+        getProject()
     }, []);
 
+
+    const getProject = () => {
+            axios.get(`${API_URL}/projects/${projectId}?_embed=tasks`)
+                .then(response => {
+                    setProject(response.data);
+                })
+                .catch((error) => console.log("Error getting project details from the API...", error));
+    }
 
     const deleteProject = () => {
         axios.delete(`${API_URL}/projects/${projectId}`)
@@ -39,6 +44,18 @@ function ProjectDetailsPage() {
         <div className="ProjectDetailsPage">
             <h1>{project.title}</h1>
             <p>{project.description}</p>
+
+            <AddTask projectId={projectId} getProject={getProject}/>
+
+            {project.tasks.map((task) => {
+                return (
+                    <li className="TaskCard card" key={task.id}>
+                    <h3>{task.title}</h3>
+                    <h4>Description:</h4>
+                    <p>{task.description}</p>
+                </li>
+                )
+            })}
 
             <Link to="/projects">
                 <button>Back to projects</button>
