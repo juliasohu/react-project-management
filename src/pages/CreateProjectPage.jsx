@@ -1,25 +1,28 @@
 import { useState } from "react";
 import { API_URL } from "../config/api";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function CreateProjectPage() {
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("")
 
+    const navigate = useNavigate()
+    
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
         const newProject = {
-            title: title,
-            description: description,
+            title,
+            description,
         }
 
         axios.post(`${API_URL}/projects`, newProject)
         .then(response => {
             console.log("SUCCESSSSSS")
-            setTitle("")
-            setDescription("")
+            navigate("/projects")
         })
         .catch(e => console.log("Error creating a new project :(", e))
 
