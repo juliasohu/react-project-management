@@ -48,7 +48,7 @@ function CreateProjectPage() {
 
                 <label>
                     Description:
-                    <input
+                    <textarea
                         type="text"
                         name="description"
                         placeholder="Describe your project"
